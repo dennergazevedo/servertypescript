@@ -8,10 +8,8 @@ interface IUser{
 
 class UserController {
   async register(req: Request, res: Response) {
-    return res.json({
-      name: 'Denner',
-      email: 'dennergazevedo@gmail.com',
-    })
+    const { email } = req.params;
+    return res.json(email)
   }
 }
 export default new UserController();

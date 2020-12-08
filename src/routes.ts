@@ -1,8 +1,10 @@
 import { Router } from 'express';
-
-import UserController from './controllers/UserController';
+import authMiddleware from './app/middlewares/auth';
+import UserController from './app/controllers/UserController';
 const routes = Router();
 
-routes.get('/', UserController.register);
+routes.get('/:email', UserController.register);
+routes.use(authMiddleware);
+routes.get('/block/:email', UserController.register);
 
 export default routes;
