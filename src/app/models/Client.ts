@@ -16,6 +16,19 @@ export class Client extends Model {
   public readonly createdAt!: Date;
 }
 
+export interface IClient {
+  name: string;
+  contact?: string;
+  phone: string;
+  document: string;
+  fantasyname?: string;
+  stateregistration?: string;
+  cityregistration?: string;
+  email?: string;
+  type: number;
+  status: string;
+}
+
 Client.init(
   {
     id: {
