@@ -1,12 +1,9 @@
-export default {
-  dialect: 'mysql' as any,
+import { Sequelize } from "sequelize";
+
+export const database = new Sequelize({
+  dialect: 'mysql',
   host: 'localhost',
   username: 'root',
   password: 'c10mtp3urn',
   database: 'artcopias',
-  define: {
-    timestamps: true,
-    underscored: true,
-    underscoredAll: true,
-  },
-};
+});

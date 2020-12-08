@@ -1,9 +1,10 @@
 {
   "name": "backendtypescript",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.ts",
   "license": "MIT",
   "devDependencies": {
+    "sequelize-cli": "^6.2.0",
     "ts-node-dev": "^1.0.0",
     "typescript": "^4.1.2"
   },
@@ -16,6 +17,8 @@
     "@types/sequelize": "^4.28.9",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
-    "sequelize": "^6.3.5"
+    "mysql2": "^2.2.5",
+    "sequelize": "^6.3.5",
+    "sequelize-typescript": "^1.1.0"
   }
 }

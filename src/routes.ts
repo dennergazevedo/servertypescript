@@ -1,10 +1,11 @@
-import { Router } from 'express';
 import authMiddleware from './app/middlewares/auth';
-import UserController from './app/controllers/UserController';
-const routes = Router();
+import ClientController from './app/controllers/ClientController';
 
-routes.get('/:email', UserController.register);
-routes.use(authMiddleware);
-routes.get('/block/:email', UserController.register);
+export class Routes {
+  public clientController: ClientController = new ClientController();
 
-export default routes;
+  public routes(app: any): void {
+    app.route("/clients").get(this.clientController.searchAll);
+    app.route(authMiddleware);
+  }
+}
