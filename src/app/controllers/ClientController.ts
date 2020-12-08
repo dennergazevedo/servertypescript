@@ -5,11 +5,15 @@ export default class ClientController {
   async register(req: Request, res: Response) {
     const params: IClient = req.body;
     await Client.create<Client>(params)
-      .then((client: Client) => res.status(201).json(client))
-      .catch((err: Error) => res.status(500).json({ 
-                message: "Falha ao cadastrar cliente, verifique os dados!",
-                error: err.name
-              }));
+      .then((client: Client) => {
+        return res.status(201).json(client)
+      })
+      .catch((err: Error) => {
+        return res.status(500).json({ 
+          message: "Falha ao cadastrar cliente, verifique os dados!",
+          error: err.name,
+        })
+      });
   }
 
   async search(req: Request, res: Response) {

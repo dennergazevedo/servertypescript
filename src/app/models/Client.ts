@@ -1,5 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import { database } from '../../config/database';
+import bcrypt from 'bcryptjs';
 
 export class Client extends Model {
   public id!: number;
@@ -11,8 +12,10 @@ export class Client extends Model {
   public stateregistration!: string | null;
   public cityregistration!: string | null;
   public email!: string | null;
+  public password!: string;
   public type!: number;
   public status!: string;
+  public token!: string;
   public readonly createdAt!: Date;
 }
 
@@ -25,8 +28,10 @@ export interface IClient {
   stateregistration?: string;
   cityregistration?: string;
   email?: string;
+  password?: string;
   type: number;
   status: string;
+  token: string;
 }
 
 Client.init(
@@ -70,6 +75,11 @@ Client.init(
       allowNull: false,
       unique: true,
     },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: 123456789,
+    },
     type: {
       type: DataTypes.INTEGER,
       allowNull: false
@@ -77,6 +87,10 @@ Client.init(
     status: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    token: {
+      type: DataTypes.STRING,
+      allowNull: true,
     }
   },
   {
@@ -85,4 +99,14 @@ Client.init(
   }
 );
 
-Client.sync({ force: true }).then(() => console.log("Clients table created"));
+Client.beforeCreate<Client>(async (client: Client, options: any) =>{
+  const hash = await bcrypt.hash(client.password, 10);
+  client.password = hash;
+});
+
+export async function checkPassword(password: string, dbHash: string){
+  const resp = await bcrypt.compare(password, dbHash);
+  return resp;
+}
+
+Client.sync().then(() => console.log("Clients table created"));
