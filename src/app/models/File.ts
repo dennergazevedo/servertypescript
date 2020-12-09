@@ -28,10 +28,6 @@ File.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     describe: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -52,7 +48,7 @@ File.init(
     type: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
+    }
   },
   {
     sequelize: database,
@@ -62,4 +58,4 @@ File.init(
 
 File.belongsTo(ServiceOrder, { foreignKey: 'serviceorder_id' });
 
-File.sync().then(() => console.log("File table started"));
+File.sync({ force: true }).then(() => console.log("File table started"));
