@@ -27,7 +27,7 @@ export default class ClientController {
         }
       })
       .catch((err: Error) => res.status(500).json({
-                message: "Fala ao localizar clientes cadastrados.",
+                message: "Falha ao localizar cliente cadastrado.",
                 error: err.name
       }));
   }
@@ -46,7 +46,7 @@ export default class ClientController {
         res.status(500).json({ error: err });
       }
     }else{
-      res.status(404).json({ error: "Cliente não encontrado," });
+      res.status(404).json({ error: "Cliente não encontrado." });
     }
   }
 
@@ -63,7 +63,7 @@ export default class ClientController {
     await Client.findAll<Client>()
       .then((clients: Array<Client>) => res.json(clients))
       .catch((err: Error) => res.status(500).json({
-                message: "Fala ao localizar clientes cadastrados.",
+                message: "Falha ao localizar clientes cadastrados.",
                 error: err.name
       }));
   }

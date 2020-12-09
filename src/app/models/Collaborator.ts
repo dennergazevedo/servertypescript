@@ -2,41 +2,34 @@ import { DataTypes, Model } from 'sequelize';
 import { database } from '../../config/database';
 import bcrypt from 'bcryptjs';
 import { Address } from './Address';
-import { File } from './File';
 
-export class Client extends Model {
+export class Collaborator extends Model {
   public id!: number;
   public name!: string;
-  public contact!: string | null;
   public phone!: string;
   public document!: string;
-  public fantasyname!: string | null;
-  public stateregistration!: string | null;
-  public cityregistration!: string | null;
-  public email!: string | null;
+  public email!: string;
   public password!: string;
-  public type!: number;
-  public status!: string;
+  public active!: number;
+  public emergency!: string;
+  public permission!: number;
   public token!: string;
   public readonly createdAt!: Date;
 }
 
-export interface IClient {
+export interface ICollaborator {
   name: string;
-  contact?: string;
   phone: string;
   document: string;
-  fantasyname?: string;
-  stateregistration?: string;
-  cityregistration?: string;
-  email?: string;
-  password?: string;
-  type: number;
-  status: string;
-  token: string;
+  email: string;
+  password: string;
+  active: number;
+  emergency: string;
+  permission: number;
+  token?: string;
 }
 
-Client.init(
+Collaborator.init(
   {
     id: {
       type: DataTypes.INTEGER.UNSIGNED,
@@ -47,10 +40,6 @@ Client.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    contact: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
     phone: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -59,18 +48,6 @@ Client.init(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-    },
-    fantasyname: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    stateregistration: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    cityregistration: {
-      type: DataTypes.STRING,
-      allowNull: true,
     },
     email: {
       type: DataTypes.STRING,
@@ -82,11 +59,15 @@ Client.init(
       allowNull: false,
       defaultValue: 123456789,
     },
-    type: {
+    permission: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    status: {
+    active: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    emergency:{
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -97,21 +78,20 @@ Client.init(
   },
   {
     sequelize: database,
-    tableName: "clients",
+    tableName: "collaborators",
   }
 );
 
-Client.beforeCreate<Client>(async (client: Client, options: any) =>{
-  const hash = await bcrypt.hash(client.password, 10);
-  client.password = hash;
+Collaborator.beforeCreate<Collaborator>(async (collab: Collaborator, options: any) =>{
+  const hash = await bcrypt.hash(collab.password, 10);
+  collab.password = hash;
 });
 
-Client.belongsTo(Address, { foreignKey: 'address_id' });
-Client.belongsTo(File, { foreignKey: 'file_id' });
+Collaborator.belongsTo(Address, { foreignKey: 'address_id' });
 
 export async function checkPassword(password: string, dbHash: string){
   const resp = await bcrypt.compare(password, dbHash);
   return resp;
 }
 
-Client.sync().then(() => console.log("Client table started"));
+Collaborator.sync().then(() => console.log("Collaborator table started"));
