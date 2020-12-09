@@ -2,6 +2,7 @@ import { DataTypes, Model } from 'sequelize';
 import { database } from '../../config/database';
 import bcrypt from 'bcryptjs';
 import { Address } from './Address';
+import { File } from './File';
 
 export class Collaborator extends Model {
   public id!: number;
@@ -88,6 +89,7 @@ Collaborator.beforeCreate<Collaborator>(async (collab: Collaborator, options: an
 });
 
 Collaborator.belongsTo(Address, { foreignKey: 'address_id' });
+Collaborator.belongsTo(File, { foreignKey: 'file_id' });
 
 export async function checkPassword(password: string, dbHash: string){
   const resp = await bcrypt.compare(password, dbHash);

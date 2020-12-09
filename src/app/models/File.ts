@@ -56,6 +56,4 @@ File.init(
   }
 );
 
-File.belongsTo(ServiceOrder, { foreignKey: 'serviceorder_id' });
-
-File.sync({ force: true }).then(() => console.log("File table started"));
+File.sync().then(() => console.log("File table started"));

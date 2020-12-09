@@ -1,6 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 import { database } from '../../config/database';
 import { Collaborator } from './Collaborator';
+import { ServiceOrder } from './ServiceOrder';
 
 export class Markboard extends Model {
   public id!: number;
@@ -56,5 +57,6 @@ Markboard.init(
 );
 
 Markboard.belongsTo(Collaborator, { foreignKey: 'collab_id' });
+Markboard.belongsTo(ServiceOrder, { foreignKey: 'serviceorder_id' });
 
 Markboard.sync().then(() => console.log("Markboard table started"));

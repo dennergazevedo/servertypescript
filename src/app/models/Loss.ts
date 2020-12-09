@@ -37,6 +37,5 @@ Loss.init(
 );
 
 Loss.belongsTo(Collaborator, { foreignKey: 'collab_id' });
-Loss.belongsTo(ServiceOrder, { foreignKey: 'serviceorder_id' });
 
 Loss.sync().then(() => console.log("Loss table started"));

@@ -10,6 +10,11 @@ import MarkboardController from './app/controllers/MarkboardController';
 import NoticeController from './app/controllers/NoticeController';
 import LossController from './app/controllers/LossController';
 import FileController from './app/controllers/FileController';
+import OrderController from './app/controllers/OrderController';
+import ProductController from './app/controllers/ProductController';
+import PricetableController from './app/controllers/PricetableController';
+import InvoiceController from './app/controllers/InvoiceController';
+import FiscalNoteController from './app/controllers/FiscalNoteController';
 
 export class Routes {
   public clientController: ClientController = new ClientController();
@@ -21,6 +26,11 @@ export class Routes {
   public noticeController: NoticeController = new NoticeController();
   public lossController: LossController = new LossController();
   public fileController: FileController = new FileController();
+  public orderController: OrderController = new OrderController();
+  public productController: ProductController = new ProductController();
+  public pricetableController: PricetableController = new PricetableController();
+  public invoiceController: InvoiceController = new InvoiceController();
+  public fiscalnoteController: FiscalNoteController = new FiscalNoteController();
 
   public routes(app: any): void {
     // CLIENT
@@ -30,12 +40,43 @@ export class Routes {
       .get(this.clientController.search)
       .delete(this.clientController.delete);
 
-    //SESSION
+    // ORDER
+    app.route("/order").post(this.orderController.register);
+    app.route("/order/:id")
+      .put(this.orderController.update)
+      .get(this.orderController.search)
+      .delete(this.orderController.delete);
+    app.route("/order_byos/:id").get(this.orderController.searchAll);
+
+    // PRODUCT
+    app.route("/product").get(this.productController.searchAll);
+    app.route("/product/:id").get(this.productController.search);
+
+    // PRICE TABLE
+    app.route("/pricetable_byproduct/:id").get(this.pricetableController.searchAll);
+    app.route("/pricetable/:id").get(this.pricetableController.search);
+
+    // FISCAL NOTE
+    app.route("/fiscalnote/:id").get(this.fiscalnoteController.search);
+
+    // SESSION
     app.route("/login").post(this.sessionController.loginClient);
     app.route("/collab-login").post(this.sessionController.loginCollab);
 
     // AUTHENTICATION-----------------------------------------------------------
     app.use(authMiddleware);
+
+    // PRODUCT
+    app.route("/product").post(this.productController.register);
+    app.route("/product/:id")
+      .put(this.productController.update)
+      .delete(this.productController.delete);
+
+    // PRICE TABLE
+    app.route("/pricetable").post(this.pricetableController.register);
+    app.route("/pricetable/:id")
+      .put(this.pricetableController.update)
+      .delete(this.pricetableController.delete);
 
     // COLLABORATOR
     app.route("/collaborator")
@@ -102,5 +143,22 @@ export class Routes {
       .put(this.fileController.update)
       .get(this.fileController.search)
       .delete(this.fileController.delete);
+
+      // INVOICE
+      app.route("/invoice")
+        .post(this.invoiceController.register)
+        .get(this.invoiceController.searchAll);
+      app.route("/invoice/:id")
+        .put(this.invoiceController.update)
+        .get(this.invoiceController.search)
+        .delete(this.invoiceController.delete);
+
+      // FISCAL NOTE
+      app.route("/fiscalnote")
+        .post(this.fiscalnoteController.register)
+        .get(this.fiscalnoteController.searchAll);
+      app.route("/fiscalnote/:id")
+        .put(this.fiscalnoteController.update)
+        .delete(this.fiscalnoteController.delete);
     }
 }
