@@ -49,6 +49,10 @@ export class Routes {
     app.route("/client_update_pass/:id")
       .put(this.clientController.updatePassword);
 
+    // COLLAB
+    app.route("/collab_update_pass/:id")
+      .put(this.collaboratorController.updatePassword);
+
     // ORDER
     app.route("/order").post(this.orderController.register);
     app.route("/order/:id")

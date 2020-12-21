@@ -2,6 +2,7 @@ import { DataTypes, Model } from 'sequelize';
 import { database } from '../../config/database';
 import { Product } from './Product';
 import { ServiceOrder } from './ServiceOrder';
+import { File } from './File';
 
 export class Order extends Model {
   public id!: number;
@@ -74,5 +75,6 @@ Order.init(
 
 Order.belongsTo(ServiceOrder, { foreignKey: 'serviceorder_id' });
 Order.belongsTo(Product, { foreignKey: 'product_id' });
+Order.belongsTo(File, { foreignKey: 'file_id' });
 
 Order.sync().then(() => console.log("Order table started"));
