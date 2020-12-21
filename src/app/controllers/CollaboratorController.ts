@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-import { Collaborator, ICollaborator } from "../models/Collaborator";
+import { Collaborator, ICollaborator, checkPassword } from "../models/Collaborator";
+import bcrypt from 'bcryptjs';
 
 export default class CollaboratorController {
   async register(req: Request, res: Response) {
@@ -47,6 +48,31 @@ export default class CollaboratorController {
       }
     }else{
       res.status(404).json({ error: "Colaborador não encontrado." });
+    }
+  }
+
+  async updatePassword(req: Request, res: Response) {
+    const { id } = req.params;
+    const params: ICollaborator = req.body;
+    
+    const collab: Collaborator | null = await Collaborator.findByPk<Collaborator>(id);
+
+    if(collab){
+      if(params.oldPassword && params.password && await checkPassword(params.oldPassword, collab.password)){
+        try{
+          const hash = await bcrypt.hash(params.password, 10);
+          collab.update({
+            password: hash,
+          })
+          res.status(200).json("Senha atualizada com sucesso!");
+        } catch(err){
+          res.status(500).json({ error: err });
+        }
+      }else{
+        res.status(401).json({ error: "A senha antiga não confere!" });
+      }
+    }else{
+      res.status(404).json({ error: "Cliente não encontrado." });
     }
   }
 

@@ -7,6 +7,7 @@ class App {
   public routePrv: Routes = new Routes();
 
   constructor() {
+    require('dotenv').config();
     this.app = express();
     this.config();
     this.routePrv.routes(this.app);

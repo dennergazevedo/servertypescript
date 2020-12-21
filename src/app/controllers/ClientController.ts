@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-import { Client, IClient } from "../models/Client";
+import { Client, IClient, checkPassword } from "../models/Client";
+import bcrypt from 'bcryptjs';
 
 export default class ClientController {
   async register(req: Request, res: Response) {
@@ -44,6 +45,31 @@ export default class ClientController {
         res.status(200).json("Cliente atualizado com sucesso!");
       }catch(err){
         res.status(500).json({ error: err });
+      }
+    }else{
+      res.status(404).json({ error: "Cliente não encontrado." });
+    }
+  }
+
+  async updatePassword(req: Request, res: Response) {
+    const { id } = req.params;
+    const params: IClient = req.body;
+    
+    const client: Client | null = await Client.findByPk<Client>(id);
+
+    if(client){
+      if(params.oldPassword && params.password && await checkPassword(params.oldPassword, client.password)){
+        try{
+          const hash = await bcrypt.hash(params.password, 10);
+          client.update({
+            password: hash,
+          })
+          res.status(200).json("Senha atualizada com sucesso!");
+        } catch(err){
+          res.status(500).json({ error: err });
+        }
+      }else{
+        res.status(401).json({ error: "A senha antiga não confere!" });
       }
     }else{
       res.status(404).json({ error: "Cliente não encontrado." });

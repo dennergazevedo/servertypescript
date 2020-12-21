@@ -1,4 +1,5 @@
 import authMiddleware from './app/middlewares/auth';
+import 'dotenv/config';
 
 // CONTROLLERS
 import ClientController from './app/controllers/ClientController';
@@ -15,6 +16,9 @@ import ProductController from './app/controllers/ProductController';
 import PricetableController from './app/controllers/PricetableController';
 import InvoiceController from './app/controllers/InvoiceController';
 import FiscalNoteController from './app/controllers/FiscalNoteController';
+import BankController from './app/controllers/BankController';
+import InvoiceInstallmentController from './app/controllers/InvoiceInstallmentController';
+import TaxationController from './app/controllers/TaxationController';
 
 export class Routes {
   public clientController: ClientController = new ClientController();
@@ -31,6 +35,9 @@ export class Routes {
   public pricetableController: PricetableController = new PricetableController();
   public invoiceController: InvoiceController = new InvoiceController();
   public fiscalnoteController: FiscalNoteController = new FiscalNoteController();
+  public bankController: BankController = new BankController();
+  public invoiceInstallmentController: InvoiceInstallmentController = new InvoiceInstallmentController();
+  public taxationController: TaxationController = new TaxationController();
 
   public routes(app: any): void {
     // CLIENT
@@ -39,6 +46,8 @@ export class Routes {
       .put(this.clientController.update)
       .get(this.clientController.search)
       .delete(this.clientController.delete);
+    app.route("/client_update_pass/:id")
+      .put(this.clientController.updatePassword);
 
     // ORDER
     app.route("/order").post(this.orderController.register);
@@ -160,5 +169,32 @@ export class Routes {
       app.route("/fiscalnote/:id")
         .put(this.fiscalnoteController.update)
         .delete(this.fiscalnoteController.delete);
+
+      // BANK
+      app.route("/bank")
+        .post(this.bankController.register)
+        .get(this.bankController.searchAll);
+      app.route("/bank/:id")
+        .get(this.bankController.search)
+        .put(this.bankController.update)
+        .delete(this.bankController.delete);
+
+      // INVOICE INSTALLMENT
+      app.route("/invoiceinstallment")
+        .post(this.invoiceInstallmentController.register)
+        .get(this.invoiceInstallmentController.searchAll);
+      app.route("/invoiceinstallment/:id")
+        .get(this.invoiceInstallmentController.search)
+        .put(this.invoiceInstallmentController.update)
+        .delete(this.invoiceInstallmentController.delete);
+
+      // TAXATION
+      app.route("/taxation")
+        .post(this.taxationController.register)
+        .get(this.taxationController.searchAll);
+      app.route("/taxation/:id")
+        .get(this.taxationController.search)
+        .put(this.taxationController.update)
+        .delete(this.taxationController.delete);
     }
 }

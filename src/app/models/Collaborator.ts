@@ -28,6 +28,8 @@ export interface ICollaborator {
   emergency: string;
   permission: number;
   token?: string;
+  oldPassword?: string;
+  address_id?: number;
 }
 
 Collaborator.init(

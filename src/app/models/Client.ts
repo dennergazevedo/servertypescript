@@ -31,9 +31,11 @@ export interface IClient {
   cityregistration?: string;
   email?: string;
   password?: string;
+  oldPassword?: string;
   type: number;
   status: string;
   token: string;
+  address_id?: number;
 }
 
 Client.init(
