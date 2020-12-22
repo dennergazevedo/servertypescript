@@ -18,6 +18,7 @@ export class Client extends Model {
   public type!: number;
   public status!: string;
   public token!: string;
+  public provider!: number;
   public readonly createdAt!: Date;
 }
 
@@ -36,6 +37,7 @@ export interface IClient {
   status: string;
   token: string;
   address_id?: number;
+  provider?: number;
 }
 
 Client.init(
@@ -94,6 +96,10 @@ Client.init(
     },
     token: {
       type: DataTypes.STRING,
+      allowNull: true,
+    },
+    provider: {
+      type: DataTypes.INTEGER,
       allowNull: true,
     }
   },

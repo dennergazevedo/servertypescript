@@ -19,6 +19,8 @@ import FiscalNoteController from './app/controllers/FiscalNoteController';
 import BankController from './app/controllers/BankController';
 import InvoiceInstallmentController from './app/controllers/InvoiceInstallmentController';
 import TaxationController from './app/controllers/TaxationController';
+import SearchController from './app/controllers/SearchController';
+import SlideshowController from './app/controllers/SlideshowController';
 
 export class Routes {
   public clientController: ClientController = new ClientController();
@@ -38,8 +40,15 @@ export class Routes {
   public bankController: BankController = new BankController();
   public invoiceInstallmentController: InvoiceInstallmentController = new InvoiceInstallmentController();
   public taxationController: TaxationController = new TaxationController();
+  public searchController: SearchController = new SearchController();
+  public slideshowController: SlideshowController = new SlideshowController();
 
   public routes(app: any): void {
+    // SEARCH
+    app.route("/search_star").get(this.searchController.searchStar);
+    app.route("/file/:id").get(this.fileController.search);
+    app.route("/slideshow").get(this.slideshowController.searchAll);
+
     // CLIENT
     app.route("/client").post(this.clientController.register);
     app.route("/client/:id")
@@ -78,6 +87,9 @@ export class Routes {
 
     // AUTHENTICATION-----------------------------------------------------------
     app.use(authMiddleware);
+
+    // TOKEN
+    app.route("/verify_token").get(this.sessionController.verifyToken);
 
     // PRODUCT
     app.route("/product").post(this.productController.register);
@@ -154,7 +166,6 @@ export class Routes {
       .get(this.fileController.searchAll);
     app.route("/file/:id")
       .put(this.fileController.update)
-      .get(this.fileController.search)
       .delete(this.fileController.delete);
 
       // INVOICE
@@ -200,5 +211,12 @@ export class Routes {
         .get(this.taxationController.search)
         .put(this.taxationController.update)
         .delete(this.taxationController.delete);
+
+      // SLIDESHOW
+      app.route("/slideshow").post(this.slideshowController.register);
+      app.route("/slideshow/:id")
+        .put(this.slideshowController.update)
+        .get(this.slideshowController.search)
+        .delete(this.slideshowController.delete);
     }
 }

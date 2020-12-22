@@ -5,8 +5,13 @@ import { Client, checkPassword } from "../models/Client";
 import { Collaborator } from "../models/Collaborator";
 
 export default class SessionController {
+  async verifyToken(req: Request, res: Response) {
+    res.status(200).json('Token Válido');
+  }
+
   async loginClient(req: Request, res: Response) {
-    const { email, password } = req.body;
+    if(authConfig.secret){
+      const { email, password } = req.body;
 
     const cliente: Client | null = await Client.findOne<Client>({ where: { email } });
 
@@ -20,7 +25,7 @@ export default class SessionController {
       return res.status(401).json({ error: 'Password Inválido!' });
     }
 
-    const { id, name, document, phone } = cliente;
+    const { id, name, document, phone, provider } = cliente;
 
     const tokenJwt: string = jwt.sign({ id }, authConfig.secret, {
       expiresIn: authConfig.expiresIn,
@@ -37,13 +42,18 @@ export default class SessionController {
         phone,
         document,
         email,
+        provider,
       },
       token: tokenJwt,
     });
+    }else{
+      return res.status(401).json({ error: "authConfig Secret Not Found"})
+    }
   }
 
   async loginCollab(req: Request, res: Response) {
-    const { email, password } = req.body;
+    if(authConfig.secret){
+      const { email, password } = req.body;
 
     const collab: Collaborator | null = await Collaborator.findOne<Collaborator>({ where: { email } });
 
@@ -77,5 +87,8 @@ export default class SessionController {
       },
       token: tokenJwt,
     });
+  }else{
+    return res.status(401).json({ error: "authConfig Secret Not Found"})
   }
+}
 }

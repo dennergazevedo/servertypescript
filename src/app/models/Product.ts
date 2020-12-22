@@ -8,12 +8,14 @@ export class Product extends Model {
   public unit!: number;
   public cost!: number;
   public value!: number;
+  public provider_value!: number;
   public minvalue!: number;
   public estoque!: number;
   public width!: number;
   public height!: number;
   public ncm!: number;
   public info!: Text;
+  public star!: boolean;
 }
 
 export interface IProduct {
@@ -21,12 +23,14 @@ export interface IProduct {
   unit: number;
   cost: number;
   value: number;
+  provider_value: number;
   minvalue: number;
   estoque: number;
   width?: number;
   height?: number;
   ncm: number;
   info: Text;
+  star?: boolean;
 }
 
 Product.init(
@@ -49,6 +53,10 @@ Product.init(
       allowNull: false,
     },
     value: {
+      type: DataTypes.DECIMAL,
+      allowNull: false,
+    },
+    provider_value:{
       type: DataTypes.DECIMAL,
       allowNull: false,
     },
@@ -77,6 +85,11 @@ Product.init(
     info: {
       type: DataTypes.TEXT,
       allowNull: false,
+    },
+    star: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
     }
   },
   {
