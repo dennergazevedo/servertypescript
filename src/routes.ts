@@ -21,6 +21,7 @@ import InvoiceInstallmentController from './app/controllers/InvoiceInstallmentCo
 import TaxationController from './app/controllers/TaxationController';
 import SearchController from './app/controllers/SearchController';
 import SlideshowController from './app/controllers/SlideshowController';
+import MailController from './app/controllers/MailController';
 
 export class Routes {
   public clientController: ClientController = new ClientController();
@@ -42,12 +43,16 @@ export class Routes {
   public taxationController: TaxationController = new TaxationController();
   public searchController: SearchController = new SearchController();
   public slideshowController: SlideshowController = new SlideshowController();
+  public mailController: MailController = new MailController();
 
   public routes(app: any): void {
     // SEARCH
     app.route("/search_star").get(this.searchController.searchStar);
     app.route("/file/:id").get(this.fileController.search);
     app.route("/slideshow").get(this.slideshowController.searchAll);
+
+    // MAIL
+    app.route("/contact_mail").post(this.mailController.contactMail);
 
     // CLIENT
     app.route("/client").post(this.clientController.register);
@@ -57,6 +62,7 @@ export class Routes {
       .delete(this.clientController.delete);
     app.route("/client_update_pass/:id")
       .put(this.clientController.updatePassword);
+    app.route("/reset_pass").post(this.clientController.forgotPassword);
 
     // COLLAB
     app.route("/collab_update_pass/:id")

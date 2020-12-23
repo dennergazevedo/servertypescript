@@ -15,10 +15,10 @@ export class Client extends Model {
   public cityregistration!: string | null;
   public email!: string | null;
   public password!: string;
-  public type!: number;
   public status!: string;
-  public token!: string;
   public provider!: number;
+  public reset_pass!: string | null;
+  public reset_expires!: Date | null;
   public readonly createdAt!: Date;
 }
 
@@ -33,11 +33,11 @@ export interface IClient {
   email?: string;
   password?: string;
   oldPassword?: string;
-  type: number;
   status: string;
-  token: string;
   address_id?: number;
   provider?: number;
+  reset_pass?: string;
+  reset_expires?: Date;
 }
 
 Client.init(
@@ -86,21 +86,27 @@ Client.init(
       allowNull: false,
       defaultValue: 123456789,
     },
-    type: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
     status: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    token: {
+    provider: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    reset_pass: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    provider: {
-      type: DataTypes.INTEGER,
+    reset_expires: {
+      type: DataTypes.DATE,
       allowNull: true,
+    },
+    createdAt:{
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: new Date(),
     }
   },
   {

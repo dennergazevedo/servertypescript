@@ -31,16 +31,10 @@ export default class SessionController {
       expiresIn: authConfig.expiresIn,
     });
 
-    cliente.update({
-      token: tokenJwt,
-    })
-
     return res.json({
       user: {
         id,
         name,
-        phone,
-        document,
         email,
         provider,
       },
