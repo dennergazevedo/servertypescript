@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import { File, IFile } from "../models/File";
 
+const gdrive = require('../../../gdrive');
+import path from 'path';
+
 export default class FileController {
   async register(req: Request, res: Response) {
     const params: IFile = req.body;
@@ -67,4 +70,28 @@ export default class FileController {
                 error: err.name
       }));
   }
+
+  async uploadCurriculo(req: Request, res: Response) {
+      const { originalname: nome, filename } = req.file;
+      await gdrive.pdfUpload(
+        `Curriculo - Site`,
+        path.join(__dirname, '..', '..', 'tmp', 'uploads', `${filename}`),
+        async (id: string) => {
+          await File.create<File>({
+            path: filename,
+            url: id,
+            type: "Currículo",
+          })
+            .then((file: File) => {
+              return res.status(201).json(file)
+            })
+            .catch((err: Error) => {
+              return res.status(500).json({ 
+                message: "Falha ao cadastrar arquivo, tente novamente!",
+                error: err.name,
+              })
+            });
+        }
+      );
+    }
 }

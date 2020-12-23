@@ -144,4 +144,56 @@ export default class ClientController {
     });
   return res.send();
   }
+
+  async resetPassword(req: Request, res: Response) {
+    const { email, token, password } = req.body;
+    const user = await Client.findOne<Client>({ where: { email } });
+
+    if (!user) {
+      return res.status(400).json({ error: 'Usuário não encontrado' });
+    }
+
+    if (token !== user.get().reset_pass) {
+      return res.status(400).json({ error: 'Token Inválido' });
+    }
+
+    const now = new Date();
+    if (now > user.get().reset_expires) {
+      return res.status(400).json({ error: 'Token Expirado ' });
+    }
+
+    const hash = await bcrypt.hash(password, 10);
+
+    user.update({
+      password: hash,
+      reset_pass: null,
+    });
+
+    return res.status(200).json('Senha atualizada com sucesso');
+  }
+
+  async bePartner(req: Request, res: Response) {
+    const { name, email, phone, document, city, message } = req.body;
+
+    const mailOptions = {
+      from: email,
+      to: 'suporte@artcopias.com.br',
+      subject: `[ArtCópias] Parceria ${name}`,
+      html: `<p><strong>Nome:</strong> ${name}</p>
+      <p><strong>Contato:</strong> ${phone}</p>
+      <p><strong>Documento:</strong> ${document}</p>
+      <p><strong>Cidade de Atua&ccedil;&atilde;o:</strong> ${city}</p>
+      <p><strong>Descri&ccedil;&atilde;o:</strong></p>
+      <p><i>${message}</i></p>
+      <p>&nbsp;</p>`,
+    };
+
+    transporter.sendMail(mailOptions, function(error, info) {
+      if (error) {
+        res.status(400).json({ error: 'E-mail não enviado' });
+      } else {
+        res.status(200).json(`Email enviado: ${info.response}`);
+      }
+    });
+  }
 }

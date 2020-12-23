@@ -4,7 +4,6 @@ import { ServiceOrder } from './ServiceOrder';
 
 export class File extends Model {
   public id!: number;
-  public name!: string;
   public describe!: string;
   public path!: string;
   public url!: string;
@@ -13,7 +12,6 @@ export class File extends Model {
 }
 
 export interface IFile {
-  name: string;
   describe?: string;
   path: string;
   url: string;

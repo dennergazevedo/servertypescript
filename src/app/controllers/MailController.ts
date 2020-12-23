@@ -25,4 +25,30 @@ export default class MailController {
       }
     });
   }
+
+  async sendCurriculum(req: Request, res: Response) {
+    const { pathName } = req.body;
+    const extesion = pathName.split('.');
+
+    const mailOptions = {
+      from: 'no-reply@artcopias.com.br',
+      to: 'gerencia.vendas@artcopias.com.br',
+      subject: `[ArtCópias] Currículo`,
+      attachments: [
+        {
+          filename: `CURRICULO.${extesion[1]}`,
+          path: `src/tmp/uploads/${pathName}`,
+        },
+      ],
+      html: `<p>CURRÍCULO ENVIADO PELO SITE.</p>`,
+    };
+
+    transporter.sendMail(mailOptions, function(error, info) {
+      if (error) {
+        res.status(400).json({ error: 'E-mail não enviado' });
+      } else {
+        res.status(200).json(`Email enviado: ${info.response}`);
+      }
+    });
+  }
 }

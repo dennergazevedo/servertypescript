@@ -1,6 +1,10 @@
 import authMiddleware from './app/middlewares/auth';
 import 'dotenv/config';
 
+/** Multer */
+import * as multer from 'multer';
+import multerConfig from './config/multer';
+
 // CONTROLLERS
 import ClientController from './app/controllers/ClientController';
 import SessionController from './app/controllers/SessionController';
@@ -22,6 +26,10 @@ import TaxationController from './app/controllers/TaxationController';
 import SearchController from './app/controllers/SearchController';
 import SlideshowController from './app/controllers/SlideshowController';
 import MailController from './app/controllers/MailController';
+import { Router } from 'express';
+
+/** Multer Init */
+const upload = multer.default(multerConfig);
 
 export class Routes {
   public clientController: ClientController = new ClientController();
@@ -45,184 +53,159 @@ export class Routes {
   public slideshowController: SlideshowController = new SlideshowController();
   public mailController: MailController = new MailController();
 
-  public routes(app: any): void {
+  public routes(app: Router): void {
     // SEARCH
-    app.route("/search_star").get(this.searchController.searchStar);
-    app.route("/file/:id").get(this.fileController.search);
-    app.route("/slideshow").get(this.slideshowController.searchAll);
+    app.get("/search_star", this.searchController.searchStar);
+    app.get("/file/:id", this.fileController.search);
+    app.get("/slideshow", this.slideshowController.searchAll);
 
     // MAIL
-    app.route("/contact_mail").post(this.mailController.contactMail);
+    app.post("/contact_mail", this.mailController.contactMail);
+    app.post("/send_curriculum", this.mailController.sendCurriculum);
 
     // CLIENT
-    app.route("/client").post(this.clientController.register);
-    app.route("/client/:id")
-      .put(this.clientController.update)
-      .get(this.clientController.search)
-      .delete(this.clientController.delete);
-    app.route("/client_update_pass/:id")
-      .put(this.clientController.updatePassword);
-    app.route("/reset_pass").post(this.clientController.forgotPassword);
+    app.post("/client", this.clientController.register);
+    app.put("/client/:id", this.clientController.update);
+    app.get("/client/:id", this.clientController.search);
+    app.delete("/client/:id", this.clientController.delete);
+    app.put("/client_update_pass/:id", this.clientController.updatePassword);
+    app.post("/forgot_pass", this.clientController.forgotPassword);
+    app.post("/reset_pass", this.clientController.resetPassword)
+    app.post("/be_partner", this.clientController.bePartner)
 
     // COLLAB
-    app.route("/collab_update_pass/:id")
-      .put(this.collaboratorController.updatePassword);
+    app.put("/collab_update_pass/:id", this.collaboratorController.updatePassword)
 
     // ORDER
-    app.route("/order").post(this.orderController.register);
-    app.route("/order/:id")
-      .put(this.orderController.update)
-      .get(this.orderController.search)
-      .delete(this.orderController.delete);
-    app.route("/order_byos/:id").get(this.orderController.searchAll);
+    app.post("/order", this.orderController.register);
+    app.put("/order/:id", this.orderController.update);
+    app.get("/order/:id", this.orderController.search);
+    app.delete("/order/:id", this.orderController.delete);
+    app.get("/order_byos/:id", this.orderController.searchAll);
 
     // PRODUCT
-    app.route("/product").get(this.productController.searchAll);
-    app.route("/product/:id").get(this.productController.search);
+    app.get("/product",this.productController.searchAll);
+    app.get("/product/:id", this.productController.search);
 
     // PRICE TABLE
-    app.route("/pricetable_byproduct/:id").get(this.pricetableController.searchAll);
-    app.route("/pricetable/:id").get(this.pricetableController.search);
+    app.get("/pricetable_byproduct/:id", this.pricetableController.searchAll);
+    app.get("/pricetable/:id", this.pricetableController.search);
 
     // FISCAL NOTE
-    app.route("/fiscalnote/:id").get(this.fiscalnoteController.search);
+    app.get("/fiscalnote/:id", this.fiscalnoteController.search);
 
     // SESSION
-    app.route("/login").post(this.sessionController.loginClient);
-    app.route("/collab-login").post(this.sessionController.loginCollab);
+    app.post("/login", this.sessionController.loginClient);
+    app.post("/collab-login", this.sessionController.loginCollab);
+
+    // FILE
+    app.post("/upload_curriculum", upload.single('file'), this.fileController.uploadCurriculo);
 
     // AUTHENTICATION-----------------------------------------------------------
     app.use(authMiddleware);
 
     // TOKEN
-    app.route("/verify_token").get(this.sessionController.verifyToken);
+    app.get("/verify_token", this.sessionController.verifyToken);
 
     // PRODUCT
-    app.route("/product").post(this.productController.register);
-    app.route("/product/:id")
-      .put(this.productController.update)
-      .delete(this.productController.delete);
+    app.post("/product", this.productController.register);
+    app.put("/product/:id", this.productController.update);
+    app.delete("/product/:id", this.productController.delete);
 
     // PRICE TABLE
-    app.route("/pricetable").post(this.pricetableController.register);
-    app.route("/pricetable/:id")
-      .put(this.pricetableController.update)
-      .delete(this.pricetableController.delete);
+    app.post("/pricetable", this.pricetableController.register);
+    app.put("/pricetable/:id", this.pricetableController.update);
+    app.delete("/pricetable/:id", this.pricetableController.delete);
 
     // COLLABORATOR
-    app.route("/collaborator")
-      .post(this.collaboratorController.register)
-      .get(this.collaboratorController.searchAll);
-    app.route("/collaborator/:id")
-      .put(this.collaboratorController.update)
-      .get(this.collaboratorController.search)
-      .delete(this.collaboratorController.delete);
+    app.post("/collaborator", this.collaboratorController.register);
+    app.get("/collaborator", this.collaboratorController.searchAll);
+    app.put("/collaborator/:id", this.collaboratorController.update);
+    app.get("/collaborator/:id", this.collaboratorController.search);
+    app.delete("/collaborator/:id", this.collaboratorController.delete);
 
     // CLIENT
-    app.route("/client").get(this.clientController.searchAll);
+    app.get("/client", this.clientController.searchAll);
 
     // SERVICE ORDER
-    app.route("/serviceorder")
-      .post(this.serviceOrderController.register)
-      .get(this.serviceOrderController.searchAll);
-    app.route("/serviceorder/:id")
-      .put(this.serviceOrderController.update)
-      .get(this.serviceOrderController.search)
-      .delete(this.serviceOrderController.delete);
+    app.post("/serviceorder", this.serviceOrderController.register);
+    app.get("/serviceorder", this.serviceOrderController.searchAll);
+    app.put("/serviceorder/:id", this.serviceOrderController.update);
+    app.get("/serviceorder/:id", this.serviceOrderController.search);
+    app.delete("/serviceorder/:id", this.serviceOrderController.delete);
     
     // ADDRESS CONTROLLER
-    app.route("/address")
-      .post(this.addressController.register)
-      .get(this.addressController.searchAll);
-    app.route("/address/:id")
-      .put(this.addressController.update)
-      .get(this.addressController.search)
-      .delete(this.addressController.delete);
+    app.post("/address", this.addressController.register);
+    app.get("/address", this.addressController.searchAll);
+    app.put("/address/:id", this.addressController.update);
+    app.get("/address/:id", this.addressController.search);
+    app.delete("/address/:id", this.addressController.delete);
 
     // MARKBOARD CONTROLLER
-    app.route("/markboard")
-      .post(this.markboardController.register)
-      .get(this.markboardController.searchAll);
-    app.route("/markboard/:id")
-      .put(this.markboardController.update)
-      .get(this.markboardController.search)
-      .delete(this.markboardController.delete);
+    app.post("/markboard", this.markboardController.register);
+    app.get("/markboard", this.markboardController.searchAll);
+    app.put("/markboard/:id", this.markboardController.update);
+    app.get("/markboard/:id", this.markboardController.search);
+    app.delete("/markboard/:id", this.markboardController.delete);
 
     // NOTICE CONTROLLER
-    app.route("/notice")
-      .post(this.noticeController.register)
-      .get(this.noticeController.searchAll);
-    app.route("/notice/:id")
-      .put(this.noticeController.update)
-      .get(this.noticeController.search)
-      .delete(this.noticeController.delete);
+    app.post("/notice", this.noticeController.register);
+    app.get("/notice", this.noticeController.searchAll);
+    app.put("/notice/:id", this.noticeController.update);
+    app.get("/notice/:id", this.noticeController.search);
+    app.delete("/notice/:id", this.noticeController.delete);
 
     // LOSS CONTROLLER
-    app.route("/loss")
-      .post(this.lossController.register)
-      .get(this.lossController.searchAll);
-    app.route("/loss/:id")
-      .put(this.lossController.update)
-      .get(this.lossController.search)
-      .delete(this.lossController.delete);
+    app.post("/loss", this.lossController.register);
+    app.get("/loss", this.lossController.searchAll);
+    app.put("/loss/:id", this.lossController.update);
+    app.get("/loss/:id", this.lossController.search);
+    app.delete("/loss/:id", this.lossController.delete);
 
     // FILE CONTROLLER
-    app.route("/file")
-      .post(this.fileController.register)
-      .get(this.fileController.searchAll);
-    app.route("/file/:id")
-      .put(this.fileController.update)
-      .delete(this.fileController.delete);
+    app.post("/file", this.fileController.register);
+    app.get("/file", this.fileController.searchAll);
+    app.put("/file/:id", this.fileController.update);
+    app.delete("/file/:id", this.fileController.delete);
 
       // INVOICE
-      app.route("/invoice")
-        .post(this.invoiceController.register)
-        .get(this.invoiceController.searchAll);
-      app.route("/invoice/:id")
-        .put(this.invoiceController.update)
-        .get(this.invoiceController.search)
-        .delete(this.invoiceController.delete);
+      app.post("/invoice", this.invoiceController.register);
+      app.get("/invoice", this.invoiceController.searchAll);
+      app.put("/invoice/:id", this.invoiceController.update);
+      app.get("/invoice/:id", this.invoiceController.search);
+      app.delete("/invoice/:id", this.invoiceController.delete);
 
       // FISCAL NOTE
-      app.route("/fiscalnote")
-        .post(this.fiscalnoteController.register)
-        .get(this.fiscalnoteController.searchAll);
-      app.route("/fiscalnote/:id")
-        .put(this.fiscalnoteController.update)
-        .delete(this.fiscalnoteController.delete);
+      app.post("/fiscalnote", this.fiscalnoteController.register);
+      app.get("/fiscalnote", this.fiscalnoteController.searchAll);
+      app.put("/fiscalnote/:id", this.fiscalnoteController.update);
+      app.delete("/fiscalnote/:id", this.fiscalnoteController.delete);
 
       // BANK
-      app.route("/bank")
-        .post(this.bankController.register)
-        .get(this.bankController.searchAll);
-      app.route("/bank/:id")
-        .get(this.bankController.search)
-        .put(this.bankController.update)
-        .delete(this.bankController.delete);
+      app.post("/bank", this.bankController.register);
+      app.get("/bank", this.bankController.searchAll);
+      app.get("/bank/:id", this.bankController.search);
+      app.put("/bank/:id", this.bankController.update);
+      app.delete("/bank/:id", this.bankController.delete);
 
       // INVOICE INSTALLMENT
-      app.route("/invoiceinstallment")
-        .post(this.invoiceInstallmentController.register)
-        .get(this.invoiceInstallmentController.searchAll);
-      app.route("/invoiceinstallment/:id")
-        .get(this.invoiceInstallmentController.search)
-        .put(this.invoiceInstallmentController.update)
-        .delete(this.invoiceInstallmentController.delete);
+      app.post("/invoiceinstallment", this.invoiceInstallmentController.register);
+      app.get("/invoiceinstallment", this.invoiceInstallmentController.searchAll);
+      app.get("/invoiceinstallment/:id", this.invoiceInstallmentController.search);
+      app.put("/invoiceinstallment/:id", this.invoiceInstallmentController.update);
+      app.delete("/invoiceinstallment/:id", this.invoiceInstallmentController.delete);
 
       // TAXATION
-      app.route("/taxation")
-        .post(this.taxationController.register)
-        .get(this.taxationController.searchAll);
-      app.route("/taxation/:id")
-        .get(this.taxationController.search)
-        .put(this.taxationController.update)
-        .delete(this.taxationController.delete);
+      app.post("/taxation", this.taxationController.register);
+      app.get("/taxation", this.taxationController.searchAll);
+      app.get("/taxation/:id", this.taxationController.search);
+      app.put("/taxation/:id", this.taxationController.update);
+      app.delete("/taxation/:id", this.taxationController.delete);
 
       // SLIDESHOW
-      app.route("/slideshow").post(this.slideshowController.register);
-      app.route("/slideshow/:id")
-        .put(this.slideshowController.update)
-        .get(this.slideshowController.search)
-        .delete(this.slideshowController.delete);
+      app.post("/slideshow", this.slideshowController.register);
+      app.put("/slideshow/:id", this.slideshowController.update);
+      app.get("/slideshow/:id", this.slideshowController.search);
+      app.delete("/slideshow/:id", this.slideshowController.delete);
     }
 }
