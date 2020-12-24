@@ -16,6 +16,8 @@ export class Product extends Model {
   public ncm!: number;
   public info!: Text;
   public star!: boolean;
+  public menu!: string;
+  public active!: number;
 }
 
 export interface IProduct {
@@ -31,6 +33,8 @@ export interface IProduct {
   ncm: number;
   info: Text;
   star?: boolean;
+  menu?: string;
+  active?: number;
 }
 
 Product.init(
@@ -90,7 +94,16 @@ Product.init(
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
-    }
+    },
+    menu: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    active: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 1,
+    },
   },
   {
     sequelize: database,

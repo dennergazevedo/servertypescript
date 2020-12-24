@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Product, IProduct } from "../models/Product";
+const { Op } = require('sequelize');
 
 export default class ProductController {
   async register(req: Request, res: Response) {
@@ -59,7 +60,52 @@ export default class ProductController {
   }
 
   async searchAll(req: Request, res: Response) {
-    await Product.findAll<Product>()
+    await Product.findAll<Product>({
+      where: { active: 1 },
+    })
+      .then((products: Array<Product>) => res.json(products))
+      .catch((err: Error) => res.status(500).json({
+                message: "Falha ao localizar produto.",
+                error: err.name
+      }));
+  }
+
+  async searchProductMenu(req: Request, res: Response) {
+    const { menu, name } = req.params;
+    await Product.findAll<Product>({
+      where: {
+        name: { [Op.substring]: name },
+        menu: { [Op.substring]: menu },
+      },
+    })
+      .then((products: Array<Product>) => res.json(products))
+      .catch((err: Error) => res.status(500).json({
+                message: "Falha ao localizar produto.",
+                error: err.name
+      }));
+  }
+
+  async searchProductName(req: Request, res: Response) {
+    const { name } = req.params;
+    await Product.findAll<Product>({
+      where: {
+        name: { [Op.substring]: name },
+      },
+    })
+      .then((products: Array<Product>) => res.json(products))
+      .catch((err: Error) => res.status(500).json({
+                message: "Falha ao localizar produto.",
+                error: err.name
+      }));
+  }
+
+  async searchMenu(req: Request, res: Response) {
+    const { menu } = req.params;
+    await Product.findAll<Product>({
+      where: {
+        menu: { [Op.substring]: menu },
+      },
+    })
       .then((products: Array<Product>) => res.json(products))
       .catch((err: Error) => res.status(500).json({
                 message: "Falha ao localizar produto.",

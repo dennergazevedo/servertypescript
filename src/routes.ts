@@ -60,8 +60,9 @@ export class Routes {
     app.get("/slideshow", this.slideshowController.searchAll);
 
     // MAIL
-    app.post("/contact_mail", this.mailController.contactMail);
+    app.post("/contact_mail", this.mailController.sendContact);
     app.post("/send_curriculum", this.mailController.sendCurriculum);
+    app.post("/send_budget", this.mailController.sendBudget);
 
     // CLIENT
     app.post("/client", this.clientController.register);
@@ -86,6 +87,9 @@ export class Routes {
     // PRODUCT
     app.get("/product",this.productController.searchAll);
     app.get("/product/:id", this.productController.search);
+    app.get("/menu_product/:menu/:name", this.productController.searchProductMenu);
+    app.get("/product_name/:name", this.productController.searchProductName);
+    app.get("/product_bymenu/:menu", this.productController.searchMenu);
 
     // PRICE TABLE
     app.get("/pricetable_byproduct/:id", this.pricetableController.searchAll);
