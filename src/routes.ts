@@ -104,6 +104,10 @@ export class Routes {
 
     // FILE
     app.post("/upload_curriculum", upload.single('file'), this.fileController.uploadCurriculo);
+    app.get("/download_drive/:id", this.fileController.downloadDrive);
+    app.put("/download_auth/:url", this.fileController.downloadAuth);
+    app.get("/download_open/:id", this.fileController.downloadOpen);
+    app.delete("/delete_file/:url", this.fileController.deleteFile);
 
     // AUTHENTICATION-----------------------------------------------------------
     app.use(authMiddleware);

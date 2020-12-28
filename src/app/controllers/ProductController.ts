@@ -12,7 +12,7 @@ export default class ProductController {
       .catch((err: Error) => {
         return res.status(500).json({ 
           message: "Falha ao cadastrar produto, verifique os dados!",
-          error: err.name,
+          error: err,
         })
       });
   }
@@ -28,7 +28,7 @@ export default class ProductController {
       })
       .catch((err: Error) => res.status(500).json({
                 message: "Falha ao localizar produto.",
-                error: err.name
+                error: err
       }));
   }
 

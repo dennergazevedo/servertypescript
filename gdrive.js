@@ -95,10 +95,10 @@ function rarUpload(fileName, filePath, callback) {
   });
 }
 
-async function downloadAll(url, nome) {
+async function download(url, describe) {
   const fileId = url;
   await require('./gdrive-auth')(async auth => {
-    const dest = await fs.createWriteStream(`src/tmp/down/${nome}`);
+    const dest = await fs.createWriteStream(`src/tmp/down/${describe}`);
     const drive = await google.drive({ version: 'v3', auth });
     drive.files.get(
       { fileId: fileId, alt: 'media' },
@@ -107,10 +107,10 @@ async function downloadAll(url, nome) {
         await res.data
           .on('end', async () => {
             try {
-              await api.put(`download_autorizado/${url}`, {
-                download: 1,
+              await api.put(`download_auth/${url}`, {
+                auth: 1,
               });
-              console.log('certo');
+              console.log('DOWNLOAD COMPLETE');
             } catch (error) {
               console.log(error);
             }
@@ -128,5 +128,5 @@ module.exports = {
   imageUpload,
   pdfUpload,
   rarUpload,
-  downloadAll,
+  download,
 };

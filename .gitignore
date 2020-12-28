@@ -2,5 +2,6 @@ dist
 node_modules
 .env
 src/tmp/uploads/*
+src/tmp/down/*
 token.json
 credentials.json
