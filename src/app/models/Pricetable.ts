@@ -6,11 +6,13 @@ export class Pricetable extends Model {
   public id!: number;
   public up!: number;
   public value!: number;
+  public provider_value!: number;
 }
 
 export interface IPricetable {
   up: number;
   value: number;
+  provider_value: number;
 }
 
 Pricetable.init(
@@ -28,6 +30,10 @@ Pricetable.init(
       type: DataTypes.DECIMAL,
       allowNull: false,
     },
+    provider_value: {
+      type: DataTypes.DECIMAL,
+      allowNull: false,
+    }
   },
   {
     sequelize: database,

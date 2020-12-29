@@ -19,6 +19,7 @@ export class Client extends Model {
   public provider!: number;
   public reset_pass!: string | null;
   public reset_expires!: Date | null;
+  public address_id!: number;
   public readonly createdAt!: Date;
 }
 

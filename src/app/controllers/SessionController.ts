@@ -25,7 +25,7 @@ export default class SessionController {
       return res.status(401).json({ error: 'Password Inválido!' });
     }
 
-    const { id, name, document, phone, provider } = cliente;
+    const { id, name, provider, address_id } = cliente;
 
     const tokenJwt: string = jwt.sign({ id }, authConfig.secret, {
       expiresIn: authConfig.expiresIn,
@@ -37,6 +37,7 @@ export default class SessionController {
         name,
         email,
         provider,
+        address_id,
       },
       token: tokenJwt,
     });

@@ -11,7 +11,7 @@ export default class OrderController {
       .catch((err: Error) => {
         return res.status(500).json({ 
           message: "Falha ao cadastrar Item do Pedido, verifique os dados!",
-          error: err.name,
+          error: err,
         })
       });
   }

@@ -63,7 +63,21 @@ export default class PricetableController {
     await Pricetable.findAll<Pricetable>({
       where: { product_id: req.params.id },
     })
-      .then((prices: Array<Pricetable>) => res.json(prices))
+      .then((prices: Array<Pricetable>) => {
+        const tables: Array<Pricetable> = prices.sort(function (
+          a: Pricetable,
+          b: Pricetable,
+        ) {
+          if (a.up > b.up) {
+            return 1;
+          }
+          if (a.up < b.up) {
+            return -1;
+          }
+          return 0;
+        })
+        res.json(tables)
+      })
       .catch((err: Error) => res.status(500).json({
                 message: "Falha ao localizar tabela.",
                 error: err.name

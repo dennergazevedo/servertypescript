@@ -13,7 +13,7 @@ export class Order extends Model {
   public finishing!: string;
   public sector!: string;
   public describe!: string;
-  public unitvalue!: number;
+  public art!: number;
 }
 
 export interface IOrder {
@@ -24,7 +24,7 @@ export interface IOrder {
   finishing: string;
   sector: string;
   describe: string;
-  unitvalue: number;
+  art?: boolean;
 }
 
 Order.init(
@@ -62,9 +62,10 @@ Order.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    unitvalue: {
-      type: DataTypes.DECIMAL,
+    art: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
+      defaultValue: false,
     }
   },
   {
