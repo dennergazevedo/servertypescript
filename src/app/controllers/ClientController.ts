@@ -38,6 +38,24 @@ export default class ClientController {
       }));
   }
 
+  async searchByEmail(req: Request, res: Response) {
+    const { email } = req.params;
+    await Client.findOne<Client>({
+      where: { email },
+    })
+      .then((client: Client | null) => {
+        if(client){
+          res.json(client);
+        }else{
+          res.status(404).json({ error: "Cliente não encontrado." });
+        }
+      })
+      .catch((err: Error) => res.status(500).json({
+                message: "Falha ao localizar cliente cadastrado.",
+                error: err.name
+      }));
+  }
+
   async update(req: Request, res: Response) {
     const { id } = req.params;
     const params: IClient = req.body;

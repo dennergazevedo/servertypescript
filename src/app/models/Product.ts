@@ -10,7 +10,7 @@ export class Product extends Model {
   public value!: number;
   public provider_value!: number;
   public minvalue!: number;
-  public estoque!: number;
+  public stock!: number;
   public width!: number;
   public height!: number;
   public ncm!: number;
@@ -31,7 +31,7 @@ export interface IProduct {
   value: number;
   provider_value: number;
   minvalue: number;
-  estoque: number;
+  stock: number;
   width?: number;
   height?: number;
   ncm: number;
@@ -81,7 +81,7 @@ Product.init(
       allowNull: false,
       defaultValue: -1,
     },
-    estoque: {
+    stock: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },

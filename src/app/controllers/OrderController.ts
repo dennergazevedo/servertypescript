@@ -36,7 +36,6 @@ export default class OrderController {
     const params: IOrder = req.body;
     
     const order: Order | null = await Order.findByPk<Order>(id);
-
     if(order){
       try{
         await order.update(params);

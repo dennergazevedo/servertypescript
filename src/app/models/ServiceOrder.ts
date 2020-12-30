@@ -17,6 +17,7 @@ export class ServiceOrder extends Model {
   public expedition!: string;
   public art!: number;
   public type!: string;
+  public client_id!: number;
 }
 
 export interface IServiceOrder {
@@ -31,6 +32,7 @@ export interface IServiceOrder {
   expedition?: string;
   art?: number;
   type?: string;
+  client_id?: number;
 }
 
 ServiceOrder.init(

@@ -68,6 +68,7 @@ export class Routes {
     app.post("/client", this.clientController.register);
     app.put("/client/:id", this.clientController.update);
     app.get("/client/:id", this.clientController.search);
+    app.get("/client_byemail/:email", this.clientController.searchByEmail);
     app.delete("/client/:id", this.clientController.delete);
     app.put("/client_update_pass/:id", this.clientController.updatePassword);
     app.post("/forgot_pass", this.clientController.forgotPassword);

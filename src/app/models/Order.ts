@@ -14,6 +14,7 @@ export class Order extends Model {
   public sector!: string;
   public describe!: string;
   public art!: number;
+  public serviceorder_id!: number;
 }
 
 export interface IOrder {
@@ -25,6 +26,7 @@ export interface IOrder {
   sector: string;
   describe: string;
   art?: boolean;
+  serviceorder_id?: number;
 }
 
 Order.init(
