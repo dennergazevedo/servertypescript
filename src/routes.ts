@@ -26,6 +26,7 @@ import TaxationController from './app/controllers/TaxationController';
 import SearchController from './app/controllers/SearchController';
 import SlideshowController from './app/controllers/SlideshowController';
 import MailController from './app/controllers/MailController';
+import PaymentController from './app/controllers/PaymentController';
 import { Router } from 'express';
 
 /** Multer Init */
@@ -52,6 +53,7 @@ export class Routes {
   public searchController: SearchController = new SearchController();
   public slideshowController: SlideshowController = new SlideshowController();
   public mailController: MailController = new MailController();
+  public paymentController: PaymentController = new PaymentController();
 
   public routes(app: Router): void {
     // SEARCH
@@ -116,6 +118,10 @@ export class Routes {
     // TOKEN
     app.get("/verify_token", this.sessionController.verifyToken);
 
+    // PAYMENT
+    app.post("/cielo_payment", this.paymentController.cielo);
+    app.post("/mkt_payment", this.paymentController.mercadoPago);
+
     // PRODUCT
     app.post("/product", this.productController.register);
     app.put("/product/:id", this.productController.update);
@@ -142,6 +148,7 @@ export class Routes {
     app.put("/serviceorder/:id", this.serviceOrderController.update);
     app.get("/serviceorder/:id", this.serviceOrderController.search);
     app.delete("/serviceorder/:id", this.serviceOrderController.delete);
+    app.post("/calcula_frete", this.serviceOrderController.calculaFrete);
     
     // ADDRESS CONTROLLER
     app.post("/address", this.addressController.register);

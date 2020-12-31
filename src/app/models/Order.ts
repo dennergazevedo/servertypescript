@@ -15,6 +15,8 @@ export class Order extends Model {
   public describe!: string;
   public art!: number;
   public serviceorder_id!: number;
+  public shipping!: number;
+  public deadline_shipping!: number;
 }
 
 export interface IOrder {
@@ -27,6 +29,8 @@ export interface IOrder {
   describe: string;
   art?: boolean;
   serviceorder_id?: number;
+  shipping?: number;
+  deadline_shipping?: number;
 }
 
 Order.init(
@@ -68,6 +72,14 @@ Order.init(
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
+    },
+    shipping: {
+      type: DataTypes.DECIMAL,
+      allowNull: true,
+    },
+    deadline_shipping: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     }
   },
   {

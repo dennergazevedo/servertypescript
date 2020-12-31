@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { ServiceOrder, IServiceOrder } from "../models/ServiceOrder";
+const { makeRequest } = require('../utils');
 
 export default class ServiceOrderController {
   async register(req: Request, res: Response) {
@@ -65,5 +66,38 @@ export default class ServiceOrderController {
                 message: "Falha ao localizar Ordem de Serviço.",
                 error: err.name
       }));
+  }
+
+  async calculaFrete(req: Request, res: Response) {
+
+    const { cep, peso, comprimento, altura, largura } = req.body;
+    let numCep: string = cep;
+    if(numCep){
+      numCep = numCep.replace('.', '');
+      numCep = numCep.replace('-', '');
+    }
+
+    const obj = {
+      nCdEmpresa: '',
+      sDsSenha: '',
+      nCdServico: '04510',
+      sCepOrigem: '35930004',
+      sCepDestino: numCep,
+      nVlPeso: peso,
+      nCdFormato: 1,
+      nVlComprimento: comprimento,
+      nVlAltura: altura,
+      nVlLargura: largura,
+      nVlDiametro: '0',
+      sCdMaoPropria: 'n',
+      nVlValorDeclarado: '0',
+      sCdAvisoRecebimento: 'n',
+    };
+    const response = await makeRequest(
+      'http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx/CalcPrecoPrazo',
+      'POST',
+      obj
+    );
+    res.json(response);
   }
 }
